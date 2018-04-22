@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Input,Dense 
 from keras.layers import LeakyReLU
+from keras.callbacks import ModelCheckpoint
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
@@ -19,7 +20,7 @@ import pandas as pd
 
 Labels= ['normal','fraud']
 
-dt=pd.read_csv("data.csv")
+dt=pd.read_csv("data/data_small.csv")
 
 #print(dt.shape)
 #Output (22566,10)  10 columns 
@@ -61,7 +62,7 @@ x_test = x_test.drop(['fraud'],axis=1)
 print(x_train.shape,x_test.shape)
 
 batch_size = 64
-epochs = 200
+epochs = 100
 dim = x_train.shape[1]
 
 
@@ -86,10 +87,18 @@ autoencoder.add(LeakyReLU(alpha=0.1))
 
 autoencoder.summary()
 
+model_json = autoencoder.to_json()
+with open("model.json", "w") as json_file:
+    json_file.write(model_json)
 
 autoencoder.compile(loss='mean_squared_logarithmic_error',optimizer='Adam',metrics=['accuracy'])
 
+checkpointer = ModelCheckpoint(filepath="model.h5",verbose=0,save_best_only=True)
+
 auto_train = autoencoder.fit(x_train,x_train,epochs=epochs,batch_size=batch_size,verbose=1,validation_data=(x_test,x_test))
+
+autoencoder.save_weights("model.h5")
+print("Saved model to disk")
 
 test_eval = autoencoder.evaluate(x_test,x_test)
 print('Test loss : ', test_eval[0])
