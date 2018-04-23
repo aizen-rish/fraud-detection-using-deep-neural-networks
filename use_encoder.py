@@ -35,7 +35,7 @@ x_test = x_test.drop(['fraud'],axis=1)
 print(x_train.shape,x_test.shape)
 
 # Load model
-handler = open("model.json","r")
+handler = open("saved_models/model_with_fraud.json","r")
 json_str =  handler.read()
 
 autoencoder = keras.models.model_from_json(json_str)
@@ -43,7 +43,7 @@ autoencoder = keras.models.model_from_json(json_str)
 print("Loaded succesfully")
 
 #Load weights
-autoencoder.load_weights("model.h5")
+autoencoder.load_weights("saved_models/mweights_with_frauds.h5")
 
 print(x_test[:1])
 #print(autoencoder.predict(x_test[:1]))

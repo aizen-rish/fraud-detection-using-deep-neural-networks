@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
-from keras.layers import Input,Dense 
+from keras.layers import Input,Dense
 from keras.layers import LeakyReLU
 from keras.callbacks import ModelCheckpoint
 from sklearn.preprocessing import StandardScaler
@@ -23,7 +23,7 @@ Labels= ['normal','fraud']
 dt=pd.read_csv("data/data_small.csv")
 
 #print(dt.shape)
-#Output (22566,10)  10 columns 
+#Output (22566,10)  10 columns
 
 count_classes = pd.value_counts(dt['fraud'],sort=True)
 print(count_classes)
@@ -87,7 +87,7 @@ autoencoder.add(LeakyReLU(alpha=0.1))
 autoencoder.summary()
 
 model_json = autoencoder.to_json()
-with open("model_with_frauds.json", "w") as json_file:
+with open("saved_models/model_with_frauds.json", "w") as json_file:
     json_file.write(model_json)
 
 autoencoder.compile(loss='mean_squared_logarithmic_error',optimizer='Adam',metrics=['accuracy'])
@@ -96,7 +96,7 @@ checkpointer = ModelCheckpoint(filepath="model.h5",verbose=0,save_best_only=True
 
 auto_train = autoencoder.fit(x_train,x_train,epochs=epochs,batch_size=batch_size,verbose=1,validation_data=(x_test,x_test))
 
-autoencoder.save_weights("mweights_with_frauds.h5")
+autoencoder.save_weights("saved_models/mweights_with_frauds.h5")
 print("Saved model and weights to disk")
 
 test_eval = autoencoder.evaluate(x_test,x_test)
