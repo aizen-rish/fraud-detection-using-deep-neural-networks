@@ -27,9 +27,6 @@ dt=pd.read_csv("data/data_small.csv")
 
 count_classes = pd.value_counts(dt['fraud'],sort=True)
 print(count_classes)
-#
-#frauds = dt[dt.fraud == 1]
-#normal = dt[dt.fraud == 0]
 
 #plt.bar(np.arange(2),count_classes)
 #plt.xticks(range(2),Labels)
